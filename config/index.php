@@ -20,7 +20,10 @@ error_reporting(E_ALL);
  */
 defined('BASE_PATH') || define('BASE_PATH', realpath(__DIR__));
 
-$baseUrl = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER["HTTP_HOST"]}";
+// Detect if we're behind a reverse proxy with HTTPS
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 
+          ($_SERVER['REQUEST_SCHEME'] ?? 'http');
+$baseUrl = "{$scheme}://{$_SERVER["HTTP_HOST"]}";
 $url = 'https://updates02.siberiancms.com/installs/get.php';
 $errorMessage = "";
 

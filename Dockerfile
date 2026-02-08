@@ -22,8 +22,14 @@ RUN set -eux; \
 	docker-php-ext-configure gd --with-jpeg-dir=/usr/lib/x86_64-linux-gnu/ --with-freetype-dir=/usr/lib/x86_64-linux-gnu/ ; \
 	docker-php-ext-install gd pdo_mysql; \
 	a2enmod rewrite; \
+# enable Apache modules for reverse proxy support
+	a2enmod remoteip; \
+	a2enmod headers; \
+	a2enmod setenvif; \
 # all done
 	apt-get purge -y --auto-remove;
 
 COPY config/siberian.ini $PHP_INI_DIR/conf.d/
+COPY config/apache-reverse-proxy.conf /etc/apache2/conf-available/
+RUN a2enconf apache-reverse-proxy
 COPY config/index.php /var/www/html/
