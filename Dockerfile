@@ -30,6 +30,7 @@ RUN set -eux; \
 	apt-get purge -y --auto-remove;
 
 COPY config/siberian.ini $PHP_INI_DIR/conf.d/
+COPY config/auto_prepend.php /usr/local/etc/php/reverse-proxy-prepend.php
 COPY config/apache-reverse-proxy.conf /etc/apache2/conf-available/
 RUN a2enconf apache-reverse-proxy
 COPY config/index.php /var/www/html/
