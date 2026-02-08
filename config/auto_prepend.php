@@ -6,6 +6,6 @@
  */
 
 // Override REQUEST_SCHEME if we detect HTTPS from reverse proxy
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' && $_SERVER['REQUEST_SCHEME'] !== 'https') {
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
     $_SERVER['REQUEST_SCHEME'] = 'https';
 }
