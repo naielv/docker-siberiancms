@@ -4,7 +4,7 @@ FROM php:7.3-apache
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
 
-ENV JAVA_HOME /usr/java/openjdk-15
+ENV JAVA_HOME /usr/local/openjdk-15
 ENV PATH $JAVA_HOME/bin:$PATH
 
 COPY --from=0 $JAVA_HOME $JAVA_HOME
