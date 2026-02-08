@@ -1,4 +1,4 @@
-FROM openjdk:15-slim
+FROM openjdk:15-ea-slim
 FROM php:7.3-apache
 
 # Default to UTF-8 file.encoding
