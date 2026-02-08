@@ -18,7 +18,7 @@ RUN set -eux; \
 	java --version; \
 # install required modules for Siberian SAE
 	apt-get update; \
-	apt-get install -y zip zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev ; \
+	apt-get install -y zip zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev wget; \
 	docker-php-ext-configure gd --with-jpeg-dir=/usr/lib/x86_64-linux-gnu/ --with-freetype-dir=/usr/lib/x86_64-linux-gnu/ ; \
 	docker-php-ext-install gd pdo_mysql; \
 	a2enmod rewrite; \
