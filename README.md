@@ -54,5 +54,56 @@ You may need to bind the server on a different port if 80 is already in use on y
 Then point your browser to your host.
 If you have a multihost installation (ex. swarm installation) you may need to add deploy constraints to always launch the containers or the same host or you will be unable to access your volumes content.
 
+## Reverse Proxy Support
+
+This image is fully compatible with reverse proxies (nginx, Traefik, Apache, etc.) that handle SSL/TLS termination. The image automatically detects HTTPS requests when the reverse proxy sends the appropriate headers.
+
+### Supported Headers
+
+The image recognizes the following standard reverse proxy headers:
+- `X-Forwarded-Proto` (recommended): Set to `https` when the original request was HTTPS
+- `X-Forwarded-SSL`: Set to `on` when the original request was HTTPS
+- `X-Forwarded-For`: Used to identify the real client IP address
+
+### Example with Traefik
+
+	version: '3.7'
+	services:
+	  mysql:
+	    image: mariadb:10.5
+	    environment:
+	      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+	      MYSQL_DATABASE: siberian
+	      MYSQL_USER: siberian
+	      MYSQL_PASSWORD: siberian
+	    volumes:
+	      - db:/var/lib/mysql:rw
+	  web:
+	    image: rylorin/siberiancms:latest
+	    depends_on:
+	      - mysql
+	    volumes:
+	      - htdocs:/var/www/html:rw
+	    labels:
+	      - "traefik.enable=true"
+	      - "traefik.http.routers.siberian.rule=Host(`your-domain.com`)"
+	      - "traefik.http.routers.siberian.entrypoints=websecure"
+	      - "traefik.http.routers.siberian.tls.certresolver=myresolver"
+	volumes:
+	  db:
+	  htdocs:
+
+### Example with nginx
+
+For nginx reverse proxy, configure your server block to include:
+
+	location / {
+	    proxy_pass http://siberian-cms:80;
+	    proxy_set_header Host $host;
+	    proxy_set_header X-Real-IP $remote_addr;
+	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	    proxy_set_header X-Forwarded-Proto $scheme;
+	}
+
 It took me some time to build this image therefore I hope it will help you. Please don't hesitate to report problems.
 Have fun with Siberian CMS!
